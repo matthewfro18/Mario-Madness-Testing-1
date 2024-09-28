@@ -1,8 +1,6 @@
-# THE FOLLOWING ACTIONS CODE IS FROM THE PSYCH ENGINE REPO: https://github.com/ShadowMario/FNF-PsychEngine/blob/main/.github/workflows/main.yml
+name: Pc/Desktop
 
-name: windows
-
-# Controls when the action will run.
+# Controls when the action will run. 
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
@@ -15,21 +13,27 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  ReleaseBuild:
-    runs-on: windows-latest
-
+  Desktop:
+    runs-on: ${{matrix.os}}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-12, macos-14]
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@main
 
-      - uses: krdlab/setup-haxe@master
+      - name: Setup Haxe
+        uses: krdlab/setup-haxe@master
         with:
-          haxe-version: 4.2.5
-      # Runs a install of commands using the runners shell
-      - name: Install Haxelib
+          haxe-version: 4.3.6
+
+      - name: Install libVLC (Linux)
+        if: startsWith(matrix.os, 'ubuntu')
+        run: sudo apt install libvlc-dev libvlccore-dev
+
+      - name: Install Libraries
         run: |
-          haxelib setup C:/haxelib
           haxelib install hxcpp > nul
           haxelib install lime 8.0.2
           haxelib install openfl 9.2.0
@@ -57,12 +61,47 @@ jobs:
           haxelib git hxvm-luajit https://github.com/nebulazorua/hxvm-luajit
           haxelib git faxe https://github.com/uhrobots/faxe
           haxelib git polymod https://github.com/larsiusprime/polymod.git
-          haxelib list
-        shell: cmd
-      - name: Compile
-        run: haxelib run lime build windows -release
-      - name: Publish Artifact
-        uses: actions/upload-artifact@v4
+      
+      - name: Compile (Windows)
+        if: startsWith(matrix.os, 'windows')
+        run: haxelib run lime build windows -D officialBuild
+
+      - name: Compile (Linux)
+        if: startsWith(matrix.os, 'ubuntu')
+        run: haxelib run lime build linux -D officialBuild
+
+      - name: Compile (macOS)
+        if: startsWith(matrix.os, 'macos')
+        run: haxelib run lime build mac -D officialBuild
+
+      - name: Upload Artifact (Windows)
+        if: startsWith(matrix.os, 'windows')
+        uses: actions/upload-artifact@main
         with:
-          name: ReleaseBuild
-          path: export/release/windows/bin
+          name: windowsBuild
+          path: export\release\windows\bin\*
+          if-no-files-found: error
+
+      - name: Upload Artifact (Linux)
+        if: startsWith(matrix.os, 'ubuntu')
+        uses: actions/upload-artifact@main
+        with:
+          name: linuxBuild
+          path: export/release/linux/bin/*
+          if-no-files-found: error
+
+      - name: Upload Artifact (macOS 12)
+        if: matrix.os == 'macos-12'
+        uses: actions/upload-artifact@main
+        with:
+          name: macOSBuild-x86_64
+          path: export/release/macos/bin/*
+          if-no-files-found: error
+
+      - name: Upload Artifact (macOS 14)
+        if: matrix.os == 'macos-14'
+        uses: actions/upload-artifact@main
+        with:
+          name: macOSBuild-arm64
+          path: export/release/macos/bin/*
+          if-no-files-found: 
