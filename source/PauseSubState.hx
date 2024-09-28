@@ -76,10 +76,8 @@ class PauseSubState extends MusicBeatSubstate
 		if(PlayState.deathCounter == 3 || (!PlayState.isStoryMode && !PlayState.isWarp)){
 			luigitime = true;
 		}
-		if(luigitime){
-			optionShit = ['credits', 'freeplay', 'options', 'Exit'];
-			menuItemsOG = ['Resume', 'Restart', 'Botplay', 'Exit'];
-		} 
+		optionShit = ['credits', 'freeplay', 'options', 'Exit'];
+		menuItemsOG = ['Resume', 'Restart', 'Botplay', 'Exit'];
 		menuItems = menuItemsOG;
 
 		for (i in 0...CoolUtil.difficultyStuff.length)
