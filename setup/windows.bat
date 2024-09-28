@@ -18,6 +18,7 @@ haxelib install hxjsonast
 haxelib install hxcodec 2.6.1
 haxelib install linc_luajit
 haxelib install hscript
+haxelib install hxcodec 2.6.1
 haxelib git hscript-ex https://github.com/ianharrigan/hscript-ex
 haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
 haxelib git hxvm-luajit https://github.com/nebulazorua/hxvm-luajit
