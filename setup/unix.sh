@@ -9,7 +9,7 @@ echo Installing dependencies...
 echo This might take a few moments depending on your internet speed.
 haxelib install hxcpp > nul
 haxelib install flixel-addons 3.1.1
-haxelib install flixel 5.3.1
+haxelib git flixel https://github.com/matthewfro1818/flixel
 haxelib install flixel-ui 2.5.0
 haxelib install flixel-tools 1.5.1
 haxelib install hxCodec 2.6.1
