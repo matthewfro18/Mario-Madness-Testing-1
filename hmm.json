@@ -6,6 +6,11 @@
       "version": "7.9.0"
     },
     {
+      "name": "discord_rpc",
+      "type": "haxelib",
+      "version": null
+    },
+    {
       "name": "openfl",
       "type": "haxelib",
       "version": null
